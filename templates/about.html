@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Gesture Controlled Presentation</title>
+    <style>
+        :root {
+            --primary-color: #2a2a2a;
+            --secondary-color: #f5f5f5;
+            --accent-color: #007AFF;
+            --transition: all 0.3s ease;
+            --shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--secondary-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+        }
+
+        .menu {
+            width: 250px;
+            background-color: white;
+            position: fixed;
+            height: 100%;
+            left: -250px;
+            top: 0;
+            overflow-x: hidden;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+        .menu.active {
+            left: 0;
+        }
+
+        .menu h2 {
+            text-align: left;
+            padding: 24px;
+            font-weight: 500;
+            font-size: 18px;
+            border-bottom: 1px solid #eee;
+            color: var(--primary-color);
+        }
+
+        .menu ul {
+            list-style: none;
+            padding: 16px;
+        }
+
+        .menu ul li {
+            margin: 8px 0;
+        }
+
+        .menu ul li button {
+            width: 100%;
+            padding: 12px 16px;
+            background-color: transparent;
+            color: var(--primary-color);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: left;
+            font-size: 15px;
+        }
+
+        .menu ul li button:hover {
+            background-color: #f5f5f5;
+            color: var(--accent-color);
+        }
+
+        .menu-toggle {
+            font-size: 24px;
+            cursor: pointer;
+            padding: 16px;
+            background: transparent;
+            color: var(--primary-color);
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            border: none;
+            z-index: 100;
+            transition: var(--transition);
+        }
+
+        .content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 80px 24px 40px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--primary-color);
+        }
+
+        p {
+            font-size: 17px;
+            color: #666;
+            margin-bottom: 40px;
+            max-width: 600px;
+        }
+
+        .about-box {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .about-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .about-box h2 {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .about-box ul {
+            list-style: none;
+        }
+
+        .about-box ul li {
+            padding: 16px;
+            margin: 8px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: var(--transition);
+        }
+
+        .about-box ul li:hover {
+            background: #f0f1f2;
+        }
+
+        .emoji {
+            font-size: 20px;
+            min-width: 24px;
+        }
+
+        .highlight {
+            color: var(--accent-color);
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 80px 16px 24px;
+            }
+
+            .about-box {
+                padding: 24px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .menu.active + .content {
+                margin-left: 250px;
+            }
+        }
+    </style>
+    <script>
+        function toggleMenu() {
+            document.getElementById("menu").classList.toggle("active");
+        }
+        
+        function closeMenu() {
+            document.getElementById("menu").classList.remove("active");
+        }
+    </script>
+</head>
+<body>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    
+    <div class="menu" id="menu" onmouseleave="closeMenu()">
+        <h2>Navigation</h2>
+        <ul>
+            <li><button onclick="window.location.href='/'">Home</button></li>
+            <li><button onclick="window.location.href='#'">About</button></li>
+            <li><button onclick="window.location.href='/introduction'">Introduction</button></li>
+        </ul>
+    </div>
+
+    <div class="content">
+        <h1>About Gesture Controlled Presentation</h1>
+        <p>
+            The <span class="highlight">Gesture Controlled Presentation</span> system is an innovative way to interact with presentations 
+            without using a traditional clicker or keyboard. This project brings <span class="highlight">Artificial Intelligence (AI) & Computer Vision</span> 
+            together to recognize hand gestures for controlling slides.
+        </p>
+
+        <div class="about-box">
+            <h2><span class="emoji">🔹</span>Key Features</h2>
+            <ul>
+                <li><span class="emoji">🙌</span><span class="highlight">Hand Gesture Recognition</span> using AI-powered tracking</li>
+                <li><span class="emoji">🎨</span><span class="highlight">Real-Time Drawing</span> on slides for annotations</li>
+                <li><span class="emoji">🔄</span><span class="highlight">Undo & Clear</span> feature for better control</li>
+                <li><span class="emoji">⚡</span><span class="highlight">Seamless Navigation</span> between slides</li>
+                <li><span class="emoji">🖥️</span><span class="highlight">User-Friendly Web Interface</span></li>
+            </ul>
+        </div>
+
+        <div class="about-box">
+            <h2><span class="emoji">🔹</span>Technologies Used</h2>
+            <ul>
+                <li><span class="emoji">📷</span><span class="highlight">OpenCV</span> - Real-time computer vision processing</li>
+                <li><span class="emoji">🖥️</span><span class="highlight">Flask</span> - Web framework for seamless interface</li>
+                <li><span class="emoji">🎨</span><span class="highlight">HTML, CSS, JavaScript</span> - For an interactive UI</li>
+                <li><span class="emoji">🧠</span><span class="highlight">MediaPipe</span> - AI-powered hand tracking</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

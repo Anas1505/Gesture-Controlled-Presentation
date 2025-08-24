@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hand Gesture Controlled Presentation</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --text-light: #ecf0f1;
+            --text-dark: #2c3e50;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .menu {
+            width: 0;
+            background: var(--primary-color);
+            color: var(--text-light);
+            padding: 20px 0;
+            box-shadow: var(--shadow);
+            position: fixed;
+            height: 100%;
+            overflow-x: hidden;
+            transition: var(--transition);
+            left: -280px;
+            z-index: 1000;
+        }
+
+        .menu.active {
+            width: 280px;
+            left: 0;
+        }
+
+        .menu:hover {
+            width: 280px;
+            left: 0;
+        }
+
+        .menu h2 {
+            margin: 0;
+            padding: 20px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            text-align: center;
+            cursor: pointer;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .menu ul {
+            list-style: none;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .menu ul li {
+            margin: 15px 0;
+        }
+
+        .menu ul li button {
+            width: 100%;
+            padding: 12px 20px;
+            cursor: pointer;
+            background: transparent;
+            color: var(--text-light);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .menu ul li button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .user-info {
+            color: var(--text-light);
+            padding: 15px;
+            text-align: center;
+            margin: 20px 0;
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .menu-toggle {
+            font-size: 24px;
+            cursor: pointer;
+            padding: 12px 20px;
+            background: var(--primary-color);
+            color: var(--text-light);
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            border: none;
+            border-radius: 6px;
+            transition: var(--transition);
+            z-index: 1001;
+            box-shadow: var(--shadow);
+        }
+
+        .menu-toggle:hover {
+            background: var(--secondary-color);
+        }
+
+        .presentation {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            margin-left: 60px;
+        }
+
+        .presentation h1 {
+            font-size: 2.5rem;
+            color: var(--text-dark);
+            margin-bottom: 30px;
+            font-weight: 300;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .upload-container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .upload-container label {
+            display: block;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .upload-container input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+
+        .upload-container input:hover {
+            border-color: var(--secondary-color);
+        }
+
+        .presentation img {
+            width: 90%;
+            max-width: 1200px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            margin: 20px 0;
+            background: white;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .buttons button {
+            padding: 12px 25px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            background: var(--primary-color);
+            color: var(--text-light);
+            border-radius: 6px;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+        .buttons button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .flash-messages {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1002;
+        }
+
+        .flash-message {
+            padding: 15px 25px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            color: var(--text-light);
+            background: var(--primary-color);
+            box-shadow: var(--shadow);
+            animation: slideIn 0.3s ease forwards, fadeOut 5s forwards;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            .presentation h1 {
+                font-size: 2rem;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            .buttons button {
+                width: 100%;
+            }
+        }
+    </style>
+    <script>
+        function toggleMenu() {
+            document.getElementById("menu").classList.toggle("active");
+        }
+        
+        function closeMenu() {
+            document.getElementById("menu").classList.remove("active");
+        }
+        
+        function nextSlide() {
+            fetch('/next_slide');
+        }
+        
+        function prevSlide() {
+            fetch('/previous_slide');
+        }
+        
+        function clearDrawings() {
+            fetch('/clear_drawings');
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById('folder-input').addEventListener('change', function(event) {
+                let files = event.target.files;
+                if (files.length === 0) return;
+
+                let folderPath = files[0].webkitRelativePath.split('/')[0];
+
+                fetch('/upload_folder', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'folder_path=' + encodeURIComponent(folderPath)
+                }).then(response => {
+                    if (response.ok) {
+                        showMessage("Folder selected successfully!", "success");
+                        location.reload();
+                    } else {
+                        showMessage("Error selecting folder. Ensure the folder contains images.", "error");
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
+                    showMessage("An error occurred while processing your request.", "error");
+                });
+            });
+
+            setTimeout(function() {
+                const flashMessages = document.querySelectorAll('.flash-message');
+                flashMessages.forEach(msg => msg.style.display = 'none');
+            }, 5000);
+        });
+
+        function showMessage(message, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'flash-message';
+            messageDiv.textContent = message;
+            messageDiv.style.backgroundColor = type === 'success' ? '#2ecc71' : '#e74c3c';
+            
+            const container = document.querySelector('.flash-messages');
+            container.appendChild(messageDiv);
+            
+            setTimeout(() => messageDiv.remove(), 5000);
+        }
+    </script>
+</head>
+<body>
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <div class="menu" id="menu" onmouseleave="closeMenu()">
+        <h2 onclick="toggleMenu()">Menu</h2>
+        <ul>
+            <li>
+                <div class="user-info">
+                    Welcome, {{ username if username else 'Guest' }}
+                </div>
+            </li>
+            <li><button onclick="window.location.href='/about'">About</button></li>
+            <li><button onclick="window.location.href='/introduction'">Instructions</button></li>
+            <li><button onclick="window.location.href='/signout'">Sign Out</button></li>
+        </ul>
+    </div>
+
+    <div class="presentation">
+        <h1>Gesture Controlled Presentation</h1>
+
+        <div class="upload-container">
+            <label for="folder-input">Select Presentation Folder:</label>
+            <input type="file" id="folder-input" webkitdirectory directory>
+        </div>
+
+        <img src="{{ url_for('video_feed') }}" alt="Live Presentation">
+
+        <div class="buttons">
+            <button onclick="prevSlide()">Previous Slide</button>
+            <button onclick="nextSlide()">Next Slide</button>
+            <button onclick="clearDrawings()">Clear All Drawings</button>
+        </div>
+    </div>
+</body>
+</html>
